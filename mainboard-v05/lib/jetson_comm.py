@@ -38,4 +38,24 @@ TBD
 
 class JetsonComm:
     def __init__(self, uart):
-        pass
+        self._uart = uart
+
+    def read(self, num_bytes):
+        """Read up to num_bytes of data from the Jetson Nano directly, without parsing.
+        Returns a bytearray with up to num_bytes or None if nothing was read"""
+        return self._uart.read(num_bytes)
+
+    def write(self, bytestr):
+        """Write a bytestring data to the GPS directly, without parsing
+        or checksums"""
+        return self._uart.write(bytestr)
+
+    @property
+    def in_waiting(self):
+        """Returns number of bytes available in UART read buffer"""
+        return self._uart.in_waiting
+    
+    def readline(self):
+        """Returns a newline terminated bytearray, must have timeout set for
+        the underlying UART or this will block forever!"""
+        return self._uart.readline()
