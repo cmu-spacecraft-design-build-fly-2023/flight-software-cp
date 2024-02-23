@@ -134,7 +134,7 @@ class Satellite:
         # Initialize USB charger
         try:
             self.usb = bq25883.BQ25883(self.i2c1)
-            self.usb.charging = False
+            self.usb.charge_en = False
             self.usb.wdt = False
             self.usb.led=False
             self.usb.charging_current=8 #400mA
@@ -236,7 +236,7 @@ class Satellite:
         if self.hardware['USB']:
             self.usb_charging=value
             self.usb.led=value
-            self.usb.charging=value
+            self.usb.charge_en=value
 
     @property
     def battery_voltage(self):

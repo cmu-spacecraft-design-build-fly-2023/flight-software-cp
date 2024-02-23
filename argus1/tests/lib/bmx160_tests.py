@@ -4,6 +4,7 @@ from analogio import AnalogIn
 import digitalio, sdcardio, pwmio, tasko
 
 from board_config import BoardConfig
+from component_test import ComponentTest
 import bmx160
 
 class BMX160_Test(ComponentTest):

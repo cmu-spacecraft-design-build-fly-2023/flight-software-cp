@@ -33,6 +33,9 @@ class BoardConfig:
     ADM1176_I2C = I2C
     ADM1176_I2C_ADDR = const(0x94)
 
+    BQ25883_I2C = I2C
+    BQ25883_I2C_ADDR = const(0x6B)
+
     # XY Hardware
 
     # Jetson Hardware
