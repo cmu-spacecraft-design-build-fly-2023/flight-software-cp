@@ -34,6 +34,9 @@ class BoardConfig:
     ADM1176_I2C = I2C
     ADM1176_I2C_ADDR = const(0x94)
 
+    BQ25883_I2C = I2C
+    BQ25883_I2C_ADDR = const(0x6B)
+
     DRV8830_I2C = I2C
     DRV8830_XP_I2C_ADDR     = const(0xC0)
     DRV8830_XM_I2C_ADDR     = const(0xC2)

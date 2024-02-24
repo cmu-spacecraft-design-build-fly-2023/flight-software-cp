@@ -16,7 +16,9 @@ import pycubed_rfm9x # Radio
 import bmx160 # IMU
 import neopixel # RGB LED
 import bq25883 # USB Charger
-import adm1176_tests # Power Monitor
+import adm1176_tests # Power Monitor Tests
+import bmx160_tests # IMU Tests
+import bq25883_tests # Charger Tests
 import drv8830_tests # Torque coil driver
 from board_config import BoardConfig
 
@@ -27,9 +29,13 @@ from micropython import const
 
 def main():
     # ADM1176
-    adm1176 = adm1176_tests()
+    adm1176 = adm1176_tests.ADM1176_Tests()
     adm1176.run_diagnostic_test()
 
+    # BQ25883
+    bq25883 = bq25883_tests.bq25883_Tests()
+    bq25883.run_diagnostic_test()
+    
     # DRV8830
     drv8830_xp = drv8830_tests()
     drv8830_xp.run_diagnostic_test(BoardConfig.DRV8830_XP_I2C_ADDR)
