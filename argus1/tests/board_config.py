@@ -35,7 +35,11 @@ class BoardConfig:
     ADM1176_I2C_ADDR = const(0x94)
 
     DRV8830_I2C = I2C
-    DRV8830_I2C_ADDR = const(0xC8)
+    DRV8830_XP_I2C_ADDR     = const(0xC0)
+    DRV8830_XM_I2C_ADDR     = const(0xC2)
+    DRV8830_YP_I2C_ADDR     = const(0xC4)
+    DRV8830_YM_I2C_ADDR     = const(0xC6)
+    DRV8830_CAM_I2C_ADDR    = const(0xC8)
 
     # XY Hardware
 
