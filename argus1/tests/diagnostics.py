@@ -19,6 +19,8 @@ import bq25883 # USB Charger
 import adm1176_tests # Power Monitor Tests
 import bmx160_tests # IMU Tests
 import bq25883_tests # Charger Tests
+import drv8830_tests # Torque coil driver
+from board_config import BoardConfig
 
 # Common CircuitPython Libs
 from os import listdir,stat,statvfs,mkdir,chdir
@@ -34,6 +36,13 @@ def main():
     bq25883 = bq25883_tests.bq25883_Tests()
     bq25883.run_diagnostic_test()
     
+    # DRV8830
+    drv8830_xp = drv8830_tests()
+    drv8830_xp.run_diagnostic_test(BoardConfig.DRV8830_XP_I2C_ADDR)
+    drv8830_xp.run_diagnostic_test(BoardConfig.DRV8830_XM_I2C_ADDR)
+    drv8830_xp.run_diagnostic_test(BoardConfig.DRV8830_YP_I2C_ADDR)
+    drv8830_xp.run_diagnostic_test(BoardConfig.DRV8830_YM_I2C_ADDR)
+    drv8830_xp.run_diagnostic_test(BoardConfig.DRV8830_CAM_I2C_ADDR)
 
 if __name__ == "__main__":
     main()

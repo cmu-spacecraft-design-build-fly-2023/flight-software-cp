@@ -17,7 +17,7 @@ class ADM1176_Tests(ComponentTest):
             self.initialize()
             self.initialized = True
         except Exception as e:
-            print("Could not initialize BMX160. Error: " + str(e))
+            print("Could not initialize ADM1176. Error: " + str(e))
     
     def initialize(self) -> None:
         self._device = adm1176.ADM1176(BoardConfig.ADM1176_I2C, addr=BoardConfig.ADM1176_I2C_ADDR)

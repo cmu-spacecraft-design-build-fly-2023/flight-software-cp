@@ -30,7 +30,7 @@ class BMX160_Test(ComponentTest):
         success = True
 
         error_reg = self._device.query_error()
-        if self._device.fatal_error != 0:
+        if self._device.fatal_err != 0:
             print("Error: Fatal error as occured")
             success = False 
         

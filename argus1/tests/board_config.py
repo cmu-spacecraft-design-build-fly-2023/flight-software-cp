@@ -15,6 +15,7 @@ class BoardConfig:
     RFM9X = True    # Radio
     BMX160 = True   # IMU
     ADM1176 = True  # Power Monitor
+    DRV8830 = True  # Torque Coil
 
     # Interfaces
     I2C = busio.I2C(board.SCL, board.SDA)
@@ -35,6 +36,13 @@ class BoardConfig:
 
     BQ25883_I2C = I2C
     BQ25883_I2C_ADDR = const(0x6B)
+
+    DRV8830_I2C = I2C
+    DRV8830_XP_I2C_ADDR     = const(0xC0)
+    DRV8830_XM_I2C_ADDR     = const(0xC2)
+    DRV8830_YP_I2C_ADDR     = const(0xC4)
+    DRV8830_YM_I2C_ADDR     = const(0xC6)
+    DRV8830_CAM_I2C_ADDR    = const(0xC8)
 
     # XY Hardware
 
