@@ -3,7 +3,7 @@ import busio, time, sys
 from analogio import AnalogIn
 import digitalio, sdcardio, pwmio, tasko
 
-from board_config import BoardConfig
+from argus1.board_config import BoardConfig
 from component_test import ComponentTest
 import bq25883
 

@@ -3,7 +3,7 @@ import busio, time, sys
 from analogio import AnalogIn
 import digitalio, sdcardio, pwmio, tasko
 
-from board_config import BoardConfig
+from argus1.board_config import BoardConfig
 from component_test import ComponentTest
 import bmx160
 
@@ -19,7 +19,7 @@ class BMX160_Test(ComponentTest):
             print("Could not initialize BMX160. Error: " + str(e))
     
     def initialize(self) -> None:
-        self._device = bmx160.BMX160_I2C(BoardConfig.BMX160_I2C)
+        self._device = bmx160.BMX160_I2C(BoardConfig.BMX160_I2C, addr=BoardConfig.BMX160_I2C_ADDR)
         
 
     def _check_for_errors(self) -> bool:

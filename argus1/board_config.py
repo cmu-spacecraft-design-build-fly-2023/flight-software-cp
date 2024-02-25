@@ -30,6 +30,7 @@ class BoardConfig:
     RFM9X_DIO0 = board.RF1_IO0
 
     BMX160_I2C = I2C
+    BMX160_I2C_ADDR = const(0x68)
 
     ADM1176_I2C = I2C
     ADM1176_I2C_ADDR = const(0x94)
@@ -43,6 +44,14 @@ class BoardConfig:
     DRV8830_YP_I2C_ADDR     = const(0xC4)
     DRV8830_YM_I2C_ADDR     = const(0xC6)
     DRV8830_CAM_I2C_ADDR    = const(0xC8)
+
+    OPT4001_I2C = I2C
+    OPT4001_EXPANDER1_I2C_ADDR = const(0x42)
+    OPT4001_EXPANDER2_I2C_ADDR = const(0x43)
+    OPT4001_GND_I2C_ADDR = const(0x44)
+    OPT4001_VDD_I2C_ADDR = const(0x45)
+    OPT4001_SDA_I2C_ADDR = const(0x46)
+    OPT4001_SCL_I2C_ADDR = const(0x47)
 
     # XY Hardware
 

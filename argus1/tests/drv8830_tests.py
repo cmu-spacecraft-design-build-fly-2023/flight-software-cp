@@ -4,7 +4,7 @@ from analogio import AnalogIn
 import digitalio, sdcardio, pwmio, tasko
 
 from component_test import ComponentTest
-from board_config import BoardConfig
+from argus1.board_config import BoardConfig
 import drv8830
 
 class DRV8830_Test(ComponentTest):

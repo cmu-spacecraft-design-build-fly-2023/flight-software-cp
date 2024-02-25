@@ -5,7 +5,7 @@ import digitalio, sdcardio, pwmio, tasko
 from micropython import const
 
 from component_test import ComponentTest
-from board_config import BoardConfig
+from argus1.board_config import BoardConfig
 import adm1176
 
 class ADM1176_Tests(ComponentTest):

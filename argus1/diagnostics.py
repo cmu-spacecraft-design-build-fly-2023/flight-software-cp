@@ -11,6 +11,8 @@ from storage import mount,umount,VfsFat
 from analogio import AnalogIn
 import digitalio, sdcardio, pwmio, tasko
 
+from .board_config import BoardConfig
+
 # Hardware Specific Libs
 import pycubed_rfm9x # Radio
 import bmx160 # IMU
@@ -19,15 +21,17 @@ import bq25883 # USB Charger
 import adm1176_tests # Power Monitor Tests
 import bmx160_tests # IMU Tests
 import bq25883_tests # Charger Tests
-import drv8830_tests # Torque coil driver
-from board_config import BoardConfig
+import drv8830_tests
+
+
+from argus1.board_config import BoardConfig
 
 # Common CircuitPython Libs
 from os import listdir,stat,statvfs,mkdir,chdir
 from bitflags import bitFlag,multiBitFlag,multiByte
 from micropython import const
 
-def main():
+def run_diagnostics():
     # ADM1176
     adm1176 = adm1176_tests.ADM1176_Tests()
     adm1176.run_diagnostic_test()
@@ -44,5 +48,9 @@ def main():
     drv8830_xp.run_diagnostic_test(BoardConfig.DRV8830_YM_I2C_ADDR)
     drv8830_xp.run_diagnostic_test(BoardConfig.DRV8830_CAM_I2C_ADDR)
 
+    #BMX160
+    bmx160_dev = bmx160_tests()
+    bmx160_dev.run_diagonstic_test()
+
 if __name__ == "__main__":
-    main()
+    run_diagnostics()
