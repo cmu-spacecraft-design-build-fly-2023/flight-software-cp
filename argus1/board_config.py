@@ -53,6 +53,9 @@ class BoardConfig:
     OPT4001_SDA_I2C_ADDR = const(0x46)
     OPT4001_SCL_I2C_ADDR = const(0x47)
 
+    PCF2583_I2C = I2C
+    PCF2583_I2C_ADDR = const(0x68)
+
     # XY Hardware
 
     # Jetson Hardware

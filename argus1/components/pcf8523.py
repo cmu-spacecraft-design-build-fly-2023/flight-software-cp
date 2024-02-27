@@ -156,8 +156,8 @@ class PCF8523:
     """Calibration offset to apply, from -64 to +63.  See the PCF8523 datasheet
     figure 18 for the offset calibration calculation workflow."""
 
-    def __init__(self, i2c_bus: I2C):
-        self.i2c_device = I2CDevice(i2c_bus, 0x68)
+    def __init__(self, i2c_bus: I2C, i2c_addr = 0x68):
+        self.i2c_device = I2CDevice(i2c_bus, i2c_addr)
 
         # Try and verify this is the RTC we expect by checking the timer B
         # frequency control bits which are 1 on reset and shouldn't ever be

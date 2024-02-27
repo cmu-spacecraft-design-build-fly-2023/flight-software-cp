@@ -78,6 +78,7 @@ class DRV8830_Test(ComponentTest):
     def run_diagnostic_test(self, I2C_ADDR) -> None:
         if not self.initialized(I2C_ADDR):
             print("DRV8830 not initialized. Exiting test.")
+            return
 
         success = True
         if not self._check_for_faults():
