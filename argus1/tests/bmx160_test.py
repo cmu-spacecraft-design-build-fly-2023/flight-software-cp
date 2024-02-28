@@ -19,7 +19,7 @@ class BMX160_Test(ComponentTest):
             print("Could not initialize BMX160. Error: " + str(e))
     
     def initialize(self) -> None:
-        self._device = bmx160.BMX160_I2C(BoardConfig.BMX160_I2C, addr=BoardConfig.BMX160_I2C_ADDR)
+        self._device = bmx160.BMX160_I2C(BoardConfig.BMX160_I2C)
         
 
     def _check_for_errors(self) -> bool:

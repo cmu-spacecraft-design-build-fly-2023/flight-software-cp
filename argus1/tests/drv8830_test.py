@@ -19,7 +19,7 @@ class DRV8830_Test(ComponentTest):
             print("Could not initialize DRV8830. Error: " + str(e))
     
     def initialize(self, I2C_ADDR) -> None:
-        self._device = drv8830.DRV8830(BoardConfig.DRV8830_I2C, addr=I2C_ADDR)
+        self._device = drv8830.DRV8830(BoardConfig.DRV8830_I2C, address=I2C_ADDR)
 
     def _check_for_faults(self) -> bool:
         """_check_for_faults: Checks for any device faluts returned by fault function in DRV8830
