@@ -20,13 +20,23 @@ class Adafruit_GPS_Test(ComponentTest):
     
     def initialize(self) -> None:
         self._device = adafruit_gps.GPS(BoardConfig.GPS_UART)
+        self._enable = digitalio.DigitalInOut(BoardConfig.GPS_EN)
+        self._enable.switch_to_output()
 
     def _check_for_updates(self) -> bool:
-        """_check_for_errors: Checks for any device errors on GPS
+        """_check_for_errors: Checks for an update on the GPS
 
         :return: true if test passes, false if fails
         """
-        success = self._device.update()
+        success = False
+        num_tries = 20
+
+        for i in range(num_tries):
+            success = self._device.update()
+            if success:
+                break
+            sleep(1)
+
         return success
        
 
