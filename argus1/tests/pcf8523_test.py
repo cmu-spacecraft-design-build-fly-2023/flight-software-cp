@@ -7,20 +7,20 @@ from argus1.board_config import BoardConfig
 from component_test import ComponentTest
 import pcf2583
 
-class PCF2583Test(ComponentTest):
+class PCF2583_Test(ComponentTest):
     def __init__(self) -> None:
         self.initialized = False
         self._device = None
         
         try:
-            self.initialize()
+            self._initialize()
             self.initialized = True
         except Exception as e:
             print("Could not initialize OPT4001. Error: " + str(e))
     
 
-    def initialize(self, I2C_ADDR) -> None:
-        self._device = pcf2583.PCF8523(BoardConfig.PCF8523_I2C, addr=I2C_ADDR)
+    def _initialize(self) -> None:
+        self._device = pcf2583.PCF8523(BoardConfig.PCF8523_I2C, BoardConfig.PCF8523_I2C_ADDR)
 
     def _check_lost_power(self) -> bool:
         """_check_lost_power: Check if power was lost since the time was set.

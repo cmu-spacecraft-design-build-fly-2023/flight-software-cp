@@ -8,18 +8,20 @@ from argus1.board_config import BoardConfig
 import drv8830
 
 class DRV8830_Test(ComponentTest):
-    def __init__(self) -> None:
+    def __init__(self, i2c_address: int) -> None:
         self.initialized = False
         self._device = None
 
+        self.i2c_address = i2c_address
+
         try:
-            self.initialize()
+            self._initialize()
             self.initialized = True
         except Exception as e:
             print("Could not initialize DRV8830. Error: " + str(e))
     
-    def initialize(self, I2C_ADDR) -> None:
-        self._device = drv8830.DRV8830(BoardConfig.DRV8830_I2C, address=I2C_ADDR)
+    def _initialize(self) -> None:
+        self._device = drv8830.DRV8830(BoardConfig.DRV8830_I2C, self.i2c_address)
 
     def _check_for_faults(self) -> bool:
         """_check_for_faults: Checks for any device faluts returned by fault function in DRV8830

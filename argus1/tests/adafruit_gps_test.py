@@ -13,12 +13,12 @@ class Adafruit_GPS_Test(ComponentTest):
         self._device = None
 
         try:
-            self.initialize()
+            self._initialize()
             self.initialized = True
         except Exception as e:
             print("Could not initialize Adafruit_GPS. Error: " + str(e))
     
-    def initialize(self) -> None:
+    def _initialize(self) -> None:
         self._device = adafruit_gps.GPS(BoardConfig.GPS_UART)
         self._enable = digitalio.DigitalInOut(BoardConfig.GPS_EN)
         self._enable.switch_to_output()

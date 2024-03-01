@@ -8,18 +8,18 @@ from component_test import ComponentTest
 from argus1.board_config import BoardConfig
 import adm1176
 
-class ADM1176_Tests(ComponentTest):
+class ADM1176_Test(ComponentTest):
     def __init__(self) -> None:
         self.initialized = False
         self._device = None
         
         try:
-            self.initialize()
+            self._initialize()
             self.initialized = True
         except Exception as e:
             print("Could not initialize ADM1176. Error: " + str(e))
     
-    def initialize(self) -> None:
+    def _initialize(self) -> None:
         self._device = adm1176.ADM1176(BoardConfig.ADM1176_I2C, addr=BoardConfig.ADM1176_I2C_ADDR)
         self._device.ON()
         self._device.clear()

@@ -13,11 +13,11 @@ class BQ25883_Test(ComponentTest):
         self._device = None
 
         try:
-            self.initialize()
+            self._initialize()
         except Exception as e:
             print("Could not initialize BQ25883. Error: " + str(e))
     
-    def initialize(self) -> None:
+    def _initialize(self) -> None:
         self._device = bq25883.BQ25883(BoardConfig.BQ25883_I2C, BoardConfig.BQ25883_I2C_ADDR)
         self.initialized = True
 

@@ -15,12 +15,12 @@ class RFM9X_Test(ComponentTest):
     """
     def __init__(self):
         try:
-            self.initialize()
+            self._initialize()
         except Exception as e:
             print("Could not initialize RFM9X. Error: " + str(e))
 
     
-    def initialize(self) -> None:
+    def _initialize(self) -> None:
         """initialize: Initialize the RFM9X module for testing
         """
         self.rfm9x = pycubed_rfm9x.RFM9x(self.config.SPI,
