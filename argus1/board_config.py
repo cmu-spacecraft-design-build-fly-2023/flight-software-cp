@@ -56,7 +56,7 @@ class BoardConfig:
     PCF2583_I2C = I2C
     PCF2583_I2C_ADDR = const(0x68)
 
-    GPS_I2C = I2C
+    GPS_UART = UART
 
     # XY Hardware
 

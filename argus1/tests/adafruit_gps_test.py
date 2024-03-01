@@ -19,15 +19,14 @@ class Adafruit_GPS_Test(ComponentTest):
             print("Could not initialize Adafruit_GPS. Error: " + str(e))
     
     def initialize(self) -> None:
-        self._device = adafruit_gps.GPS_GtopI2C(BoardConfig.GPS_I2C)
+        self._device = adafruit_gps.GPS(BoardConfig.GPS_UART)
 
-    def _check_for_errors(self) -> bool:
+    def _check_for_updates(self) -> bool:
         """_check_for_errors: Checks for any device errors on GPS
 
         :return: true if test passes, false if fails
         """
-        success = True
-
+        success = self._device.update()
         return success
        
 
@@ -36,8 +35,8 @@ class Adafruit_GPS_Test(ComponentTest):
             print("Adafruit GPS not initialized. Exiting test.")
 
         success = True
-        if not self._check_for_errors():
-            print("Adafruit GPS: Error code check test failed")
+        if not self._check_for_updates():
+            print("Adafruit GPS: Update check test failed")
             success = False
 
         if success:
