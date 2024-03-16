@@ -16,7 +16,7 @@ class PCF2583_Test(ComponentTest):
             self._initialize()
             self.initialized = True
         except Exception as e:
-            print("Could not initialize OPT4001. Error: " + str(e))
+            print("Could not initialize PCF2583. Error: " + str(e))
     
 
     def _initialize(self) -> None:
@@ -51,7 +51,7 @@ class PCF2583_Test(ComponentTest):
             print("PCF2583: Alarm status test failed")
             success = False
         if not self._check_lost_power():
-            print("PCF2583: Alarm status test failed")
+            print("PCF2583: Battery is low")
             success = False
 
         if success:
