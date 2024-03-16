@@ -23,21 +23,28 @@ class BoardConfig:
     UART = busio.UART(board.TX, board.RX, baudrate=9600)
     
     # Argus1 Hardware
-    RFM9X_SPI = board.SPI
-    RFM9X_CS = board.RF1_CS
-    RFM9X_RST = board.RF1_RST
-    RFM9X_EN = board.EN_RF
-    RFM9X_DIO0 = board.RF1_IO0
+    RFM9X_SPI               = board.SPI
+    RFM9X_CS                = board.RF1_CS
+    RFM9X_RST               = board.RF1_RST
+    RFM9X_EN                = board.EN_RF
+    RFM9X_DIO0              = board.RF1_IO0
 
-    BMX160_I2C = I2C
-    BMX160_I2C_ADDR = const(0x68)
+    BMX160_I2C              = I2C
+    BMX160_I2C_ADDR         = const(0x68)
 
-    ADM1176_I2C = I2C
-    ADM1176_I2C_ADDR = const(0x94)
+    ADM1176_I2C             = I2C
+    ADM1176_I2C_ADDR        = const(0x94)
 
-    BQ25883_I2C = I2C
-    BQ25883_I2C_ADDR = const(0x6B)
+    BQ25883_I2C             = I2C
+    BQ25883_I2C_ADDR        = const(0x6B)
 
+    PCF8523_I2C             = I2C
+    PCF8523_I2C_ADDR        = const(0x68)
+
+    GPS_UART                = UART
+    GPS_EN                  = board.EN_GPS
+
+    # XY Hardware
     DRV8830_I2C = I2C
     DRV8830_XP_I2C_ADDR     = const(0xC0)
     DRV8830_XM_I2C_ADDR     = const(0xC2)
@@ -45,18 +52,13 @@ class BoardConfig:
     DRV8830_YM_I2C_ADDR     = const(0xC6)
     DRV8830_CAM_I2C_ADDR    = const(0xC8)
 
-    OPT4001_I2C = I2C
-    OPT4001_EXPANDER1_I2C_ADDR = const(0x42)
-    OPT4001_EXPANDER2_I2C_ADDR = const(0x43)
-    OPT4001_GND_I2C_ADDR = const(0x44)
-    OPT4001_VDD_I2C_ADDR = const(0x45)
-    OPT4001_SDA_I2C_ADDR = const(0x46)
-    OPT4001_SCL_I2C_ADDR = const(0x47)
-
-    PCF2583_I2C = I2C
-    PCF2583_I2C_ADDR = const(0x68)
-
-    # XY Hardware
+    OPT4001_I2C             = I2C
+    OPT4001_XP_I2C_ADDR     = const(0x42)
+    OPT4001_XM_I2C_ADDR     = const(0x43)
+    OPT4001_YP_I2C_ADDR     = const(0x44)
+    OPT4001_YM_I2C_ADDR     = const(0x45)
+    OPT4001_ZP_I2C_ADDR     = const(0x46)
+    OPT4001_ZM_I2C_ADDR     = const(0x47)
 
     # Jetson Hardware
 

@@ -34,6 +34,7 @@ def run_diagnostics():
     print("Running ADM1176 Tests")
     # ADM1176
     adm1176 = adm1176_test.ADM1176_Test()
+    adm1176 = adm1176_test.ADM1176_Test()
     adm1176.run_diagnostic_test()
 
     # BQ25883

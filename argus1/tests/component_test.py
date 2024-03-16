@@ -11,7 +11,7 @@ class ComponentTest:
     """
     Base class for all component tests
     """
-    def initialize(self, I2C_ADDRESS = None) -> None:
+    def __initialize(self) -> None:
         """initialize: Initialize the component for testing
         """
         raise NotImplementedError("Subclasses must implement initialize method")

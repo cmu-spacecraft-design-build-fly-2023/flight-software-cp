@@ -3,12 +3,13 @@ from components import adm1176
 from .component_test import ComponentTest
 
 class ADM1176_Test(ComponentTest):
+class ADM1176_Test(ComponentTest):
     def __init__(self) -> None:
         self.initialized = False
         self._device = None
         
         try:
-            self.initialize()
+            self._initialize()
             self.initialized = True
         except Exception as e:
             print("Could not initialize ADM1176. Error: " + str(e))
