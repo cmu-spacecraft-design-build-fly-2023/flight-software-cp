@@ -14,11 +14,13 @@ from analogio import AnalogIn
 import digitalio, sdcardio, pwmio, tasko
 
 # Hardware Specific Libs
-import pycubed_rfm9x # Radio
-import bmx160 # IMU
-import neopixel # RGB LED
-import bq25883 # USB Charger
-import adm1176 # Power Monitor
+import components
+import lib
+# import pycubed_rfm9x # Radio
+# import bmx160 # IMU
+# import neopixel # RGB LED
+# import bq25883 # USB Charger
+# import adm1176 # Power Monitor
 
 # Common CircuitPython Libs
 from os import listdir,stat,statvfs,mkdir,chdir
@@ -88,8 +90,8 @@ class Satellite:
         self._chrg.switch_to_input()
 
         # Define SPI,I2C,UART
-        self.i2c1  = busio.I2C(board.SCL,board.SDA)
-        self.spi   = board.SPI()
+        # self.i2c1  = busio.I2C(board.SCL,board.SDA)
+        # self.spi   = board.SPI()
         self.uart  = busio.UART(board.TX,board.RX)
 
         # Define GPS

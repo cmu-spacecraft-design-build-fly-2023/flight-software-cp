@@ -11,37 +11,37 @@ from storage import mount,umount,VfsFat
 from analogio import AnalogIn
 import digitalio, sdcardio, pwmio, tasko
 
-from .board_config import BoardConfig
+from board_config import BoardConfig
+
+from tests import adm1176_test
+import tests
 
 # Hardware Specific Libs
-import pycubed_rfm9x # Radio
-import bmx160 # IMU
-import neopixel # RGB LED
-import bq25883 # USB Charger
-import adm1176_tests # Power Monitor Tests
-import bmx160_tests # IMU Tests
-import bq25883_tests # Charger Tests
-import drv8830_tests
-
-
-from argus1.board_config import BoardConfig
+# import pycubed_rfm9x # Radio
+# import bmx160 # IMU
+# import neopixel # RGB LED
+# import bq25883 # USB Charger
+# import adm1176_tests # Power Monitor Tests
+# import bmx160_tests # IMU Tests
+# import bq25883_tests # Charger Tests
+# import drv8830_tests
 
 # Common CircuitPython Libs
 from os import listdir,stat,statvfs,mkdir,chdir
-from bitflags import bitFlag,multiBitFlag,multiByte
 from micropython import const
 
 def run_diagnostics():
+    print("Running ADM1176 Tests")
     # ADM1176
-    adm1176 = adm1176_tests.ADM1176_Tests()
+    adm1176 = adm1176_test.ADM1176_Test()
     adm1176.run_diagnostic_test()
 
     # BQ25883
-    bq25883 = bq25883_tests.bq25883_Tests()
+    bq25883 = BQ25883_Test()
     bq25883.run_diagnostic_test()
     
     # DRV8830
-    drv8830_xp = drv8830_tests()
+    drv8830_xp = DRV8830_Test()
     drv8830_xp.run_diagnostic_test(BoardConfig.DRV8830_XP_I2C_ADDR)
     drv8830_xp.run_diagnostic_test(BoardConfig.DRV8830_XM_I2C_ADDR)
     drv8830_xp.run_diagnostic_test(BoardConfig.DRV8830_YP_I2C_ADDR)
@@ -49,8 +49,8 @@ def run_diagnostics():
     drv8830_xp.run_diagnostic_test(BoardConfig.DRV8830_CAM_I2C_ADDR)
 
     #BMX160
-    bmx160_dev = bmx160_tests()
+    bmx160_dev = BMX160_Test()
     bmx160_dev.run_diagonstic_test()
 
-if __name__ == "__main__":
-    run_diagnostics()
+print("Running diagnostics...")
+run_diagnostics()

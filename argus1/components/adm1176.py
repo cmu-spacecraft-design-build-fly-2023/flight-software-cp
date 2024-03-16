@@ -67,6 +67,9 @@ class ADM1176:
         self.sense_resistor=1
         self.config('V_CONT,I_CONT')
 
+        self._on = True
+        self._overcurrent_level = 0xFF
+
     def config(self, value: str) -> None:
         """config: sets voltage current readout configuration.
 
@@ -101,8 +104,7 @@ class ADM1176:
         _current = ((I_FULLSCALE/VI_RESOLUTION) * raw_current) / self.sense_resistor # amperes
         return (_voltage,_current)
 
-    @property
-    def OFF(self) -> None:
+    def __turn_off(self) -> None:
         """OFF: Hot-swaps the device out.        
         """
         _extcmd[0] = CONTROL_REG_ADDR
@@ -110,8 +112,7 @@ class ADM1176:
         with self.i2c_device as i2c:
             i2c.write(_extcmd)
 
-    @property
-    def ON(self) -> None:
+    def __turn_on(self) -> None:
         """ON: Turns the power management IC on, allows it to be
         hot-swapped in, without interrupting power supply.
         """
@@ -122,12 +123,32 @@ class ADM1176:
         self.config('V_CONT,I_CONT')
 
     @property
-    def overcurrent_level(self, value: int = 0xFF) -> None:
+    def device_on(self) -> bool:
+        return self._on
+    
+    @device_on.setter
+    def device_on(self, turn_on: bool) -> None:
+        if turn_on:
+            self.__turn_on()
+        else:
+            self.__turn_off()
+
+    @device_on.getter
+    def device_on(self) -> bool:
+        return (self.status & STATUS_OFF_STATUS) != STATUS_OFF_STATUS
+        
+
+    @property
+    def overcurrent_level(self) -> int:
         """overcurrent_level: Sets the overcurrent level
 
         :param value: The overcurrent threshold
         # TODO Place relevant conversion equation here
         """
+        return self._overcurrent_level
+
+    @overcurrent_level.setter
+    def overcurrent_level(self, value: int = 0xFF) -> None:
         # enable over current alert
         _extcmd[0] = ALERT_EN_EXT_REG_ADDR
         _extcmd[1] |= ALERT_EN_EN_ADC_OC4
@@ -140,6 +161,12 @@ class ADM1176:
         _extcmd[1] = value
         with self.i2c_device as i2c:
             i2c.write(_extcmd)
+
+        self._overcurrent_level = value
+
+    @overcurrent_level.getter
+    def overcurrent_level(self) -> int:
+        return self._overcurrent_level
 
     @property
     def clear(self) -> None:
@@ -171,5 +198,5 @@ class ADM1176:
             i2c.readinto(_STATUS)
         _cmd[0] &= ~(STATUS_READ)
         with self.i2c_device as i2c:
-            i2c.write(_cmd, stop = False)
+            i2c.write(_cmd)
         return _STATUS[0]

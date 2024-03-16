@@ -5,7 +5,7 @@ import digitalio, sdcardio, pwmio, tasko
 
 from argus1.board_config import BoardConfig
 from component_test import ComponentTest
-import bmx160
+from components import bmx160
 
 class BMX160_Test(ComponentTest):
     def __init__(self) -> None:

@@ -3,9 +3,9 @@ import busio, time, sys
 from analogio import AnalogIn
 import digitalio, sdcardio, pwmio, tasko
 
-from argus1.board_config import BoardConfig
+from board_config import BoardConfig
 from component_test import ComponentTest
-import pcf2583
+import pcf8523
 
 class PCF2583Test(ComponentTest):
     def __init__(self) -> None:
