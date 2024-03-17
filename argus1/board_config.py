@@ -1,8 +1,5 @@
-import board, microcontroller
-import busio, time, sys
-from storage import mount,umount,VfsFat
-from analogio import AnalogIn
-import digitalio, sdcardio, pwmio, tasko
+import board
+import busio
 from micropython import const
 
 class BoardConfig:

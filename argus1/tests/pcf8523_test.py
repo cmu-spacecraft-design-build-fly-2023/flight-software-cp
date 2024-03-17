@@ -1,13 +1,8 @@
-import board, microcontroller
-import busio, time, sys
-from analogio import AnalogIn
-import digitalio, sdcardio, pwmio, tasko
-
 from board_config import BoardConfig
-from component_test import ComponentTest
-import pcf8523
+from components import pcf8523
+from .component_test import ComponentTest
 
-class PCF2583_Test(ComponentTest):
+class PCF8523_Test(ComponentTest):
     def __init__(self) -> None:
         self.initialized = False
         self._device = None
@@ -20,7 +15,7 @@ class PCF2583_Test(ComponentTest):
     
 
     def _initialize(self) -> None:
-        self._device = pcf2583.PCF8523(BoardConfig.PCF8523_I2C, BoardConfig.PCF8523_I2C_ADDR)
+        self._device = pcf8523.PCF8523(BoardConfig.PCF8523_I2C, BoardConfig.PCF8523_I2C_ADDR)
 
     def _check_lost_power(self) -> bool:
         """_check_lost_power: Check if power was lost since the time was set.

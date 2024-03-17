@@ -1,11 +1,6 @@
-import board, microcontroller
-import busio, time, sys
-from analogio import AnalogIn
-import digitalio, sdcardio, pwmio, tasko
-
-from argus1.board_config import BoardConfig
-from component_test import ComponentTest
-import opt4001
+from board_config import BoardConfig
+from components import opt4001
+from .component_test import ComponentTest
 
 class OPT4001_Test(ComponentTest):
     def __init__(self, i2c_address: int) -> None:
@@ -45,7 +40,7 @@ class OPT4001_Test(ComponentTest):
         return success
     
     def run_diagnostic_test(self):
-        if not self.initialized():
+        if not self.initialized:
             print("OPT4001 not initialized. Exiting test.")
             return
 

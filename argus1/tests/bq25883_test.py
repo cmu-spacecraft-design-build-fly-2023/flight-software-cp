@@ -1,11 +1,6 @@
-import board, microcontroller
-import busio, time, sys
-from analogio import AnalogIn
-import digitalio, sdcardio, pwmio, tasko
-
-from argus1.board_config import BoardConfig
-from component_test import ComponentTest
-import bq25883
+from board_config import BoardConfig
+from components import bq25883
+from .component_test import ComponentTest
 
 class BQ25883_Test(ComponentTest):
     def __init__(self) -> None:
@@ -18,7 +13,7 @@ class BQ25883_Test(ComponentTest):
             print("Could not initialize BQ25883. Error: " + str(e))
     
     def _initialize(self) -> None:
-        self._device = bq25883.BQ25883(BoardConfig.BQ25883_I2C, BoardConfig.BQ25883_I2C_ADDR)
+        self._device = bq25883.BQ25883(BoardConfig.I2C, addr=BoardConfig.BQ25883_I2C_ADDR)
         self.initialized = True
 
     def _check_for_faults(self) -> bool:

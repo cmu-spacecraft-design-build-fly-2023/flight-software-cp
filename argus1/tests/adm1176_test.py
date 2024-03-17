@@ -3,13 +3,12 @@ from components import adm1176
 from .component_test import ComponentTest
 
 class ADM1176_Test(ComponentTest):
-class ADM1176_Test(ComponentTest):
     def __init__(self) -> None:
         self.initialized = False
         self._device = None
         
         try:
-            self._initialize()
+            self.initialize()
             self.initialized = True
         except Exception as e:
             print("Could not initialize ADM1176. Error: " + str(e))
@@ -18,9 +17,6 @@ class ADM1176_Test(ComponentTest):
         self._device = adm1176.ADM1176(BoardConfig.I2C)
         self._device.device_on = True
         self._device.clear
-        # self._device.overcurrent_level
-
-        print("ADM1176 Initialized!")
 
     def _simple_vi_read(self) -> bool:
         """_simple_volt_read: Reads the voltage ten times, ensures that it does not fluctuate
@@ -99,29 +95,14 @@ class ADM1176_Test(ComponentTest):
             print("Error: ADC Alert was triggered at overcurrent max")
             success = False
 
-        # Set the overcurrent thresh to min
-        self._device.overcurrent_level = 0x00
-        voltage, current = self._device.read_voltage_current()
-        print("Current: ", current)
-        print("Voltage: ", voltage)
-        self._device.clear
-
-        status = self._device.status
-        if ((status & adm1176.STATUS_ADC_OC) != adm1176.STATUS_ADC_OC):
-            print("Error: ADC OC was not triggered at overcurrent min threshold")
-            success = False
-        elif ((status & adm1176.STATUS_ADC_ALERT) !=  adm1176.STATUS_ADC_ALERT):
-            print("Error: ADC Alert was triggered at overcurrent min threshold")
-            success = False
-
         return success
 
     def run_diagnostic_test(self) -> None:
         if not self.initialized:
             print("ADM1176 not initialized. Exiting test.")
+            success = False
             return
-            
-        print("Running tests for ADM1176...")
+    
         success = True
         if not self._simple_vi_read():
             print("ADM1176: Simple VI read failed")

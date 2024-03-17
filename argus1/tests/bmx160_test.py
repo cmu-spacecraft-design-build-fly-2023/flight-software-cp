@@ -1,11 +1,6 @@
-import board, microcontroller
-import busio, time, sys
-from analogio import AnalogIn
-import digitalio, sdcardio, pwmio, tasko
-
-from argus1.board_config import BoardConfig
-from component_test import ComponentTest
+from board_config import BoardConfig
 from components import bmx160
+from .component_test import ComponentTest
 
 class BMX160_Test(ComponentTest):
     def __init__(self) -> None:
@@ -19,8 +14,7 @@ class BMX160_Test(ComponentTest):
             print("Could not initialize BMX160. Error: " + str(e))
     
     def _initialize(self) -> None:
-        self._device = bmx160.BMX160_I2C(BoardConfig.BMX160_I2C)
-        
+        self._device = bmx160.BMX160_I2C(BoardConfig.I2C)
 
     def _check_for_errors(self) -> bool:
         """_check_for_errors: Checks for any device errors on BMX160
@@ -29,7 +23,11 @@ class BMX160_Test(ComponentTest):
         """
         success = True
 
-        error_reg = self._device.query_error()
+        error_reg = self._device.query_error
+        if (error_reg > 0):
+            print("BMX160: Error detected. Error register: ", error_reg)
+            success = False
+
         if self._device.fatal_err != 0:
             print("Error: Fatal error as occured")
             success = False 
@@ -45,9 +43,11 @@ class BMX160_Test(ComponentTest):
         return success
        
 
-    def run_diagnostic_test(self) -> None:
+    def run_diagonstic_test(self) -> None:
         if not self.initialized:
             print("BMX160 not initialized. Exiting test.")
+            success = False
+            return
 
         success = True
         if not self._check_for_errors():
