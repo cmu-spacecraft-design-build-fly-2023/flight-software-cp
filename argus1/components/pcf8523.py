@@ -52,6 +52,8 @@ from adafruit_register import i2c_bits
 from adafruit_register import i2c_bcd_alarm
 from adafruit_register import i2c_bcd_datetime
 
+from diagnostics import Diagnostics
+
 try:
     import typing  # noqa: F401
     from busio import I2C
@@ -62,8 +64,7 @@ except ImportError:
 STANDARD_BATTERY_SWITCHOVER_AND_DETECTION = 0b000
 BATTERY_SWITCHOVER_OFF = 0b111
 
-
-class PCF8523:
+class PCF8523(Diagnostics):
     """Interface to the PCF8523 RTC.
 
     :param ~busio.I2C i2c_bus: The I2C bus the device is connected to
@@ -181,3 +182,43 @@ class PCF8523:
         # Automatically sets lost_power to false.
         self.power_management = STANDARD_BATTERY_SWITCHOVER_AND_DETECTION
         self.datetime_register = value
+
+######################### DIAGNOSTICS #########################
+    
+    def __check_lost_power(self) -> int:
+        """_check_lost_power: Check if power was lost since the time was set.
+        
+        :return: True if power was lost, otherwise true
+        """
+        if self.lost_power:
+            return Diagnostics.PCF8523_LOST_POWER
+        
+        return Diagnostics.NOERROR
+            
+
+    def __check_battery_status(self) -> int:
+        """_check_battery_status: Checks if the battery status is low.
+        
+        :return: False if the battery is low, otherwise true
+        """
+        if self.battery_low:
+            return Diagnostics.PCF8523_BATTERY_LOW
+        
+        return Diagnostics.NOERROR
+
+    def run_diagnostics(self) -> list[int] | None:
+        """run_diagnostic_test: Run all tests for the component
+
+        :return: List of error codes
+        """
+        error_list = []
+
+        error_list.append(self.__check_battery_status())
+        error_list.append(self.__check_lost_power())
+
+        error_list = list(set(error_list))
+
+        if not Diagnostics.NOERROR in error_list:
+            super().__errors_present = True
+
+        return error_list

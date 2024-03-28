@@ -18,6 +18,7 @@ from adafruit_register.i2c_struct import ROUnaryStruct, UnaryStruct
 from adafruit_register.i2c_bits import ROBits, RWBits
 from adafruit_register.i2c_bit import ROBit, RWBit
 
+from diagnostics import Diagnostics
 
 # Registers
 _BATV_LIM       = const(0x00)
@@ -64,7 +65,7 @@ def _to_signed(num):
         num -= 0x10000
     return num
 
-class BQ25883:
+class BQ25883(Diagnostics):
     """BQ25883: The 
     
     """
@@ -139,3 +140,41 @@ class BQ25883:
     @en_led.setter
     def led(self, value: bool) -> None:
         self._stat_dis = not value
+
+######################### DIAGNOSTICS #########################
+    
+    def __check_for_faults(self) -> list[int]:
+        """__check_for_faults: Check for faults in the BQ25883.
+        Returns:
+            bool: True if there is a fault, False if there is not a fault.
+        """
+        errors: list[int] = []
+
+        status = self.fault_status
+
+        if (status & (0xF << 4)) != 0:
+            list.append[Diagnostics.BQ25883_INPUT_OVERVOLTAGE]
+        if (status & (0x1 << 5)) != 0:
+            list.append[Diagnostics.BQ25883_THERMAL_SHUTDOWN]
+        if (status & (0x1 << 6)) != 0:
+            list.append[Diagnostics.BQ25883_BATTERY_OVERVOLTAGE]
+        if (status & (0x1 << 7)) != 0:
+            list.append[Diagnostics.BQ25883_CHARGE_SAFETY_TIMER_EXPIRED]
+
+        return errors
+
+    def run_diagnostics(self) -> list[int] | None:
+        """run_diagnostic_test: Run all tests for the component
+
+        :return: List of error codes
+        """
+        error_list = []
+
+        error_list = self.__check_for_faults()
+
+        error_list = list(set(error_list))
+
+        if not Diagnostics.NOERROR in error_list:
+            super().__errors_present = True
+
+        return error_list

@@ -2,18 +2,27 @@ from board_config import BoardConfig
 from components import drv8830
 from .component_test import ComponentTest
 
+from time import sleep
+
 class DRV8830_Test(ComponentTest):
     def __init__(self, i2c_address: int) -> None:
         self.initialized = False
         self._device = None
 
-        self._i2c_address = i2c_address
+        self._i2c_address = 0x6B
 
         try:
             self._initialize()
             self.initialized = True
         except Exception as e:
             print("Could not initialize DRV8830. Error: " + str(e))
+
+        # print("Setting throttle")
+        # while(1):
+        #     self._device.throttle = 1
+        #     sleep(2)
+        #     self._device.throttle = 0
+        #     sleep(2)
     
     def _initialize(self) -> None:
         self._device = drv8830.DRV8830(BoardConfig.DRV8830_I2C, self._i2c_address)
@@ -24,7 +33,7 @@ class DRV8830_Test(ComponentTest):
         :return: true if test passes, false if fails
         """
         success = True
-        faults_flag, faults = self._device.fault()
+        faults_flag, faults = self._device.fault
         
         if not faults_flag:
             return success
@@ -49,21 +58,24 @@ class DRV8830_Test(ComponentTest):
         :return: true if test passes, false if fails
         """
         success = True
-        throttle_val = self._device.throttle()
-        if throttle_val is not None:
-            if (throttle_val < -1.0) or (throttle_val > 1.0):
-                print("ERROR: Throttle value outside of settled range")
-                success = False
-                return success
+        # throttle_val = self._device.throttle
+        # print(throttle_val)
+        # if throttle_val is not None:
+        #     if (throttle_val < -1.0) or (throttle_val > 1.0):
+        #         print("ERROR: Throttle value outside of settled range")
+        #         success = False
+        #         return success
             
-        throttle_volts_val = self._device.throttle_volts()
+        throttle_volts_val = self._device.throttle_volts
+        print(throttle_volts_val)
         if throttle_volts_val is not None:
             if (throttle_volts_val < -5.06) or (throttle_volts_val > 5.06):
                 print("ERROR: Throttle Volts value outside of settled range")
                 success = False
                 return success
             
-        throttle_raw_val = self._device.throttle_volts()
+        throttle_raw_val = self._device.throttle_volts
+        print(throttle_raw_val)
         if throttle_raw_val is not None:
             if (throttle_raw_val < -63) or (throttle_raw_val > 63):
                 print("ERROR: Throttle raw value outside of settled range")

@@ -2,20 +2,22 @@ from board_config import BoardConfig
 from components import pcf8523
 from .component_test import ComponentTest
 
+from time import struct_time
+
 class PCF8523_Test(ComponentTest):
     def __init__(self) -> None:
         self.initialized = False
         self._device = None
-        
+
         try:
             self._initialize()
             self.initialized = True
         except Exception as e:
-            print("Could not initialize OPT4001. Error: " + str(e))
+            print("Could not initialize PCF8523. Error: " + str(e))
     
 
     def _initialize(self) -> None:
-        self._device = pcf8523.PCF8523(BoardConfig.PCF8523_I2C, BoardConfig.PCF8523_I2C_ADDR)
+        self._device = pcf8523.PCF8523(BoardConfig.PCF8523_I2C)
 
     def _check_lost_power(self) -> bool:
         """_check_lost_power: Check if power was lost since the time was set.
@@ -42,7 +44,7 @@ class PCF8523_Test(ComponentTest):
             return
 
         success = True
-        if not self._check_alarm_status():
+        if not self._check_battery_status():
             print("PCF2583: Alarm status test failed")
             success = False
         if not self._check_lost_power():

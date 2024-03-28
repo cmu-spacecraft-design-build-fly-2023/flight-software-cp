@@ -2,23 +2,28 @@ from board_config import BoardConfig
 from components import adm1176
 from .component_test import ComponentTest
 
+from micropython import const
+
 class ADM1176_Test(ComponentTest):
-    def __init__(self) -> None:
+    def __init__(self, i2c_address: int) -> None:
         self.initialized = False
         self._device = None
-        
+
+        self._i2c_address = i2c_address
+
         try:
             self.initialize()
             self.initialized = True
         except Exception as e:
             print("Could not initialize ADM1176. Error: " + str(e))
+            self._i2c_address += 1
     
     def initialize(self) -> None:
-        self._device = adm1176.ADM1176(BoardConfig.I2C)
+        self._device = adm1176.ADM1176(BoardConfig.I2C, addr=self._i2c_address)
         self._device.device_on = True
         self._device.clear
 
-    def _simple_vi_read(self) -> bool:
+    def __simple_vi_read(self) -> bool:
         """_simple_volt_read: Reads the voltage ten times, ensures that it does not fluctuate
         too much.
          
@@ -27,30 +32,18 @@ class ADM1176_Test(ComponentTest):
         V_MAX = const(9.0)
         V_MIN = const(6.0)
         
-        # prev_c = 0.0
-        # prev_v = 0.0
-        
         for i in range(10):
             (rVoltage, rCurrent) = self._device.read_voltage_current()
             if (rVoltage == 0 or rCurrent == 0):
                 print("Error: Not connected to power!! Voltage: ", rVoltage, " Current: ", rCurrent)
                 return False
             elif (rVoltage > V_MAX or rVoltage < V_MIN ):
-                print("Error: Voltage out of typical range!! Voltage Reading: ",rVoltage)
+                print("Error: Voltage out of typical range!! Voltage Reading: ", rVoltage)
                 return False
-            # elif (prev_c == rCurrent):
-            #     print("Error: No change in Current!! Prev Current: ", prev_c, " New Current: ", rCurrent)
-            #     return False
-            # elif (prev_v == rVoltage):
-            #     print("Error: No change in voltage!!")
-            #     return False
-            
-            # prev_v = rVoltage
-            # prev_c = rCurrent
         
         return True
     
-    def _on_off_test(self) -> bool:
+    def __on_off_test(self) -> bool:
         """_on_off_test: Turns the device on, off, and on 
         again and ensures corresponding register set
 
@@ -75,7 +68,7 @@ class ADM1176_Test(ComponentTest):
             return False
         return True
     
-    def _overcurrent_test(self) -> bool:
+    def _+overcurrent_test(self) -> bool:
         """_overcurrent_test: Tests that the threshold is triggering
         correctly.
         

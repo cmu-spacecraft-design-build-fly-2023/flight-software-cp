@@ -2,6 +2,8 @@ from board_config import BoardConfig
 from components import bmx160
 from .component_test import ComponentTest
 
+from digitalio import DigitalInOut, Direction
+
 class BMX160_Test(ComponentTest):
     def __init__(self) -> None:
         self.initialized = False
@@ -14,6 +16,10 @@ class BMX160_Test(ComponentTest):
             print("Could not initialize BMX160. Error: " + str(e))
     
     def _initialize(self) -> None:
+        self._enable = DigitalInOut(BoardConfig.BMX160_EN)
+        self._enable.direction = Direction.OUTPUT
+        self._enable.value = True
+
         self._device = bmx160.BMX160_I2C(BoardConfig.I2C)
 
     def _check_for_errors(self) -> bool:
@@ -24,7 +30,7 @@ class BMX160_Test(ComponentTest):
         success = True
 
         error_reg = self._device.query_error
-        if (error_reg > 0):
+        if (error_reg != "00000000"):
             print("BMX160: Error detected. Error register: ", error_reg)
             success = False
 
@@ -44,6 +50,8 @@ class BMX160_Test(ComponentTest):
        
 
     def run_diagonstic_test(self) -> None:
+        # self._enable.value = True
+
         if not self.initialized:
             print("BMX160 not initialized. Exiting test.")
             success = False
@@ -54,6 +62,9 @@ class BMX160_Test(ComponentTest):
             print("BMX160: Error code check test failed")
             success = False
 
+        self._enable.value = False
+
         if success:
             print("All tests passed")
+
     

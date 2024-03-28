@@ -14,6 +14,7 @@ Implementation Notes
 from micropython import const
 from adafruit_bus_device.i2c_device import I2CDevice
 
+from diagnostics import Diagnostics
 
 def _to_signed(num):
     if num > 0x7FFF:
@@ -60,7 +61,7 @@ ALERT_TH_EN_REG_ADDR    = const(0x82)
 CONTROL_REG_ADDR        = const(0x83)
 CONTROL_SWOFF           = const(0x1 << 0)
 
-class ADM1176:
+class ADM1176(Diagnostics):
     def __init__(self, i2c_bus, addr=0x4A):
         self.i2c_device = I2CDevice(i2c_bus, addr, probe=False)
         self.i2c_addr = addr
@@ -200,3 +201,89 @@ class ADM1176:
         with self.i2c_device as i2c:
             i2c.write(_cmd)
         return _STATUS[0]
+    
+######################### DIAGNOSTICS #########################
+    
+    def __simple_vi_read(self) -> int:
+        """_simple_volt_read: Reads the voltage ten times, ensures that it 
+        does not fluctuate too much.
+        
+        :return: true if test passes, false if fails
+        """
+        V_MAX = const(9.0)
+        V_MIN = const(6.0)
+        
+        for i in range(10):
+            (rVoltage, rCurrent) = self.read_voltage_current()
+            if (rVoltage == 0 or rCurrent == 0):
+                print("Error: Not connected to power!! Voltage: ", rVoltage, " Current: ", rCurrent)
+                return Diagnostics.ADM1176_NOT_CONNECTED_TO_POWER
+            elif (rVoltage > V_MAX or rVoltage < V_MIN ):
+                print("Error: Voltage out of typical range!! Voltage Reading: ", rVoltage)
+                return Diagnostics.ADM1176_VOLTAGE_OUT_OF_RANGE
+        
+        return Diagnostics.NOERROR
+    
+    def __on_off_test(self) -> int:
+        """_on_off_test: Turns the device on, off, and on 
+        again and ensures corresponding register set
+
+        :return: true if test passes, false if fails
+        """
+        # Turn the device on
+        self.device_on = True
+        if not self.device_on:
+            print("Error: Could not turn on device")
+            return Diagnostics.ADM1176_COULD_NOT_TURN_ON
+
+        # Turn the device off
+        self.device_on = False
+        if self.device_on:
+            print("Error: Could not turn off device")
+            return Diagnostics.ADM1176_COULD_NOT_TURN_OFF
+
+        # Turn the device on again
+        self.device_on = True
+        if not self.device_on:
+            print("Error: Could not turn on device after turning off")
+            return Diagnostics.ADM1176_COULD_NOT_TURN_ON
+        
+        return Diagnostics.NOERROR
+    
+    def __overcurrent_test(self) -> bool:
+        """_overcurrent_test: Tests that the threshold is triggering
+        correctly.
+        
+        :return: true if test passes, false if fails
+        """
+        # Set the overcurrent threshold to max
+        self.overcurrent_level = 0xFF
+        self.clear
+
+        status = self.status
+        if ((status & STATUS_ADC_OC) == STATUS_ADC_OC):
+            print("Error: ADC OC was triggered at overcurrent max")
+            return Diagnostics.ADM1176_ADC_OC_OVERCURRENT_MAX
+        elif ((status & STATUS_ADC_ALERT) ==  STATUS_ADC_ALERT):
+            print("Error: ADC Alert was triggered at overcurrent max")
+            return Diagnostics.ADM1176_ADC_ALERT_OVERCURRENT_MAX
+
+        return Diagnostics.NOERROR
+
+    def run_diagnostics(self) -> list[int] | None:
+        """run_diagnostic_test: Run all tests for the component
+
+        :return: List of error codes
+        """
+        error_list = []
+
+        error_list.append(self.__simple_vi_read())
+        error_list.append(self.__on_off_test())
+        error_list.append(self.__overcurrent_test())
+
+        error_list = list(set(error_list))
+
+        if not Diagnostics.NOERROR in error_list:
+            super().__errors_present = True
+
+        return error_list
