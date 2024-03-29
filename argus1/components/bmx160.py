@@ -228,7 +228,7 @@ BMX160_FIFO_MGA_LENGTH               = const(20)
 
 # I2C address
 BMX160_I2C_ADDR            = const(0x68)
-BMX160_I2C_ALT_ADDR        = const(0x69)  # alternate address
+# BMX160_I2C_ALT_ADDR        = const(0x69)  # alternate address
 # Interface settings
 BMX160_SPI_INTF            = const(1)
 BMX160_I2C_INTF            = const(0)
@@ -237,10 +237,9 @@ BMX160_SPI_WR_MASK         = const(0x7F)
 
 # Error related
 BMX160_OK                  = const(0)
-BMX160_ERROR               = const(-1)
+BMX160_ERROR               = -1
 
-BMX160_ERROR_CODES         = const([0x1, 0x2, 0x3, 0x6, 0x7])
-
+BMX160_ERROR_CODES         = [0x1, 0x2, 0x3, 0x6, 0x7]
 
 # Each goes with a different sensitivity in decreasing order
 AccelSensitivity2Gravity_values = [2048, 4086, 8192, 16384]   # accelerometer sensitivity. See Section 1.2, Table 2
@@ -656,10 +655,10 @@ class BMX160_I2C(BMX160):
 
     def __init__(self, i2c):
 
-        try:
-            self.i2c_device = I2CDevice(i2c, BMX160_I2C_ADDR, probe=False)
-        except:
-            self.i2c_device = I2CDevice(i2c, BMX160_I2C_ALT_ADDR, probe=False)
+        # try:
+        self.i2c_device = I2CDevice(i2c, BMX160_I2C_ADDR, probe=True)
+        # except:
+        #     self.i2c_device = I2CDevice(i2c, BMX160_I2C_ALT_ADDR, probe=True)
 
         super().__init__()
 

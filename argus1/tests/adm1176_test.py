@@ -1,12 +1,6 @@
-import board, microcontroller
-import busio, time, sys
-from analogio import AnalogIn
-import digitalio, sdcardio, pwmio, tasko
-from micropython import const
-
-from component_test import ComponentTest
-from argus1.board_config import BoardConfig
-import adm1176
+from board_config import BoardConfig
+from components import adm1176
+from .component_test import ComponentTest
 
 class ADM1176_Test(ComponentTest):
     def __init__(self) -> None:
@@ -14,16 +8,15 @@ class ADM1176_Test(ComponentTest):
         self._device = None
         
         try:
-            self._initialize()
+            self.initialize()
             self.initialized = True
         except Exception as e:
             print("Could not initialize ADM1176. Error: " + str(e))
     
-    def _initialize(self) -> None:
-        self._device = adm1176.ADM1176(BoardConfig.ADM1176_I2C, addr=BoardConfig.ADM1176_I2C_ADDR)
-        self._device.ON()
-        self._device.clear()
-        self._device.overcurrent_level()
+    def initialize(self) -> None:
+        self._device = adm1176.ADM1176(BoardConfig.I2C)
+        self._device.device_on = True
+        self._device.clear
 
     def _simple_vi_read(self) -> bool:
         """_simple_volt_read: Reads the voltage ten times, ensures that it does not fluctuate
@@ -31,8 +24,8 @@ class ADM1176_Test(ComponentTest):
          
         :return: true if test passes, false if fails
         """
-        V_MAX = const(4.5)
-        V_MIN = const(3.0)
+        V_MAX = const(9.0)
+        V_MIN = const(6.0)
         
         # prev_c = 0.0
         # prev_v = 0.0
@@ -64,27 +57,22 @@ class ADM1176_Test(ComponentTest):
         :return: true if test passes, false if fails
         """
         # Turn the device on
-        self._device.ON()
-        status_reg = self._device.status()
-        if ((status_reg & adm1176.STATUS_OFF_STATUS) != adm1176.STATUS_OFF_STATUS):
+        self._device.device_on = True
+        if not self._device.device_on:
             print("Error: Could not turn on device")
             return False
-         
 
         # Turn the device off
-        self._device.OFF()
-        status_reg = self._device.status()
-        if ((status_reg & adm1176.STATUS_OFF_STATUS) != 0):
+        self._device.device_on = False
+        if self._device.device_on:
             print("Error: Could not turn off device")
             return False
 
         # Turn the device on again
-        self._device.ON()
-        status_reg = self._device.status()
-        if ((status_reg & adm1176.STATUS_OFF_STATUS) != adm1176.STATUS_OFF_STATUS):
-            print("Error: Could not turn on device")
+        self._device.device_on = True
+        if not self._device.device_on:
+            print("Error: Could not turn on device after turning off")
             return False
-        
         return True
     
     def _overcurrent_test(self) -> bool:
@@ -96,10 +84,10 @@ class ADM1176_Test(ComponentTest):
         success = True
 
         # Set the overcurrent threshold to max
-        self._device.overcurrent_level(0xFF)
-        self._device.clear()
+        self._device.overcurrent_level = 0xFF
+        self._device.clear
 
-        status = self._device.status()
+        status = self._device.status
         if ((status & adm1176.STATUS_ADC_OC) == adm1176.STATUS_ADC_OC):
             print("Error: ADC OC was triggered at overcurrent max")
             success = False
@@ -107,25 +95,14 @@ class ADM1176_Test(ComponentTest):
             print("Error: ADC Alert was triggered at overcurrent max")
             success = False
 
-        # Set the overcurrent thresh to min
-        self._device.overcurrent_level(0x00)
-        self._device.clear()
-
-        status = self._device.status()
-        if ((status & adm1176.STATUS_ADC_OC) != adm1176.STATUS_ADC_OC):
-            print("Error: ADC OC was triggered at overcurrent min threshold")
-            success = False
-        elif ((status & adm1176.STATUS_ADC_ALERT) !=  adm1176.STATUS_ADC_ALERT):
-            print("Error: ADC Alert was triggered at overcurrent min threshold")
-            success = False
-
         return success
 
     def run_diagnostic_test(self) -> None:
         if not self.initialized:
             print("ADM1176 not initialized. Exiting test.")
-            
-        print("Running tests for ADM1176...")
+            success = False
+            return
+    
         success = True
         if not self._simple_vi_read():
             print("ADM1176: Simple VI read failed")

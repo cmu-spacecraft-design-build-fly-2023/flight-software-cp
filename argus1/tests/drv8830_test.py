@@ -1,18 +1,13 @@
-import board, microcontroller
-import busio, time, sys
-from analogio import AnalogIn
-import digitalio, sdcardio, pwmio, tasko
-
-from component_test import ComponentTest
-from argus1.board_config import BoardConfig
-import drv8830
+from board_config import BoardConfig
+from components import drv8830
+from .component_test import ComponentTest
 
 class DRV8830_Test(ComponentTest):
     def __init__(self, i2c_address: int) -> None:
         self.initialized = False
         self._device = None
 
-        self.i2c_address = i2c_address
+        self._i2c_address = i2c_address
 
         try:
             self._initialize()
@@ -21,7 +16,7 @@ class DRV8830_Test(ComponentTest):
             print("Could not initialize DRV8830. Error: " + str(e))
     
     def _initialize(self) -> None:
-        self._device = drv8830.DRV8830(BoardConfig.DRV8830_I2C, self.i2c_address)
+        self._device = drv8830.DRV8830(BoardConfig.DRV8830_I2C, self._i2c_address)
 
     def _check_for_faults(self) -> bool:
         """_check_for_faults: Checks for any device faluts returned by fault function in DRV8830
@@ -77,8 +72,8 @@ class DRV8830_Test(ComponentTest):
         
         return success
 
-    def run_diagnostic_test(self, I2C_ADDR) -> None:
-        if not self.initialized(I2C_ADDR):
+    def run_diagnostic_test(self) -> None:
+        if not self.initialized:
             print("DRV8830 not initialized. Exiting test.")
             return
 

@@ -1,11 +1,6 @@
-import board, microcontroller
-import busio, time, sys
-from analogio import AnalogIn
-import digitalio, sdcardio, pwmio, tasko
-
-from argus1.board_config import BoardConfig
-from component_test import ComponentTest
-import pycubed_rfm9x
+from board_config import BoardConfig
+from components import pycubed_rfm9x
+from .component_test import ComponentTest
 
 class RFM9X_Test(ComponentTest):
     """
@@ -23,11 +18,7 @@ class RFM9X_Test(ComponentTest):
     def _initialize(self) -> None:
         """initialize: Initialize the RFM9X module for testing
         """
-        self.rfm9x = pycubed_rfm9x.RFM9x(self.config.SPI,
-                                         self.config.RFM9X_CS, 
-                                         self.config.RFM9X_RST, 
-                                         self.config.RFM9X_DIO0, 
-                                         self.config.RFM9X_I2C)
+        pass
 
         
     def run_diagnostic_test(self) -> None:

@@ -1,13 +1,11 @@
-import board, microcontroller
-import busio, time, sys
-from analogio import AnalogIn
-import digitalio, sdcardio, pwmio, tasko
+from board_config import BoardConfig
+from components import adafruit_gps
+from .component_test import ComponentTest
 
-from argus1.board_config import BoardConfig
-from component_test import ComponentTest
-import adafruit_gps
+import digitalio
+from time import sleep
 
-class Adafruit_GPS_Test(ComponentTest):
+class GPS_Test(ComponentTest):
     def __init__(self) -> None:
         self.initialized = False
         self._device = None
