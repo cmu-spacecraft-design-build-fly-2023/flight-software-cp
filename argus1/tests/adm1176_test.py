@@ -14,7 +14,7 @@ class ADM1176_Test(ComponentTest):
             print("Could not initialize ADM1176. Error: " + str(e))
     
     def initialize(self) -> None:
-        self._device = adm1176.ADM1176(BoardConfig.I2C)
+        self._device = adm1176.ADM1176(BoardConfig.ADM1176_I2C)
         self._device.device_on = True
         self._device.clear
 
