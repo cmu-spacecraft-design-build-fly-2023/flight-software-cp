@@ -26,12 +26,12 @@ class RFM9X_Test(ComponentTest):
         radio_en.value = True
         cs = BoardConfig.RFM9X_CS
         reset = BoardConfig.RFM9X_RST
-        frequency = 915
+        frequency = 915.6
         self._device = pycubed_rfm9x.RFM9x(BoardConfig.RFM9X_SPI, cs, reset, frequency)
 
     def _read_frequency(self) -> bool:
         frequency = self._device.frequency_mhz()
-        if math.isclose(frequency, 433, abs_tol = 1) or math.isclose(frequency, 915, abs_tol = 1):
+        if math.isclose(frequency, 433, abs_tol = 1) or math.isclose(frequency, 915.6, abs_tol = 1):
             return True
         else:
             return False
